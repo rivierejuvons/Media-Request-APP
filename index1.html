@@ -1,0 +1,45 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Update the URL with your Vercel deployment URL
+            const vercelFunctionUrl = "https://media-request-ladhdfc3x-rivierejuvons-projects.vercel.app/api/slack"; 
+
+            const formData = new FormData(form);
+            const ministry = formData.get("ministry");
+            const requesterName = formData.get("requesterName");
+            const dueDate = formData.get("dueDate");
+            const requestDetails = formData.get("requestDetails");
+
+            const message = `
+                *New Request*
+                Ministry: ${ministry}
+                Requester Name: ${requesterName}
+                Due Date: ${dueDate}
+                Request Details: ${requestDetails}
+            `;
+
+            fetch(vercelFunctionUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    text: message,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle success or show a success message to the user
+                    alert("Request submitted successfully!");
+                })
+                .catch(error => {
+                    // Handle error or show an error message to the user
+                    console.error(error);
+                });
+        });
+    });
+</script>
